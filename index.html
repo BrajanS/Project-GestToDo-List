@@ -4,17 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To do list</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1>Mes tâches</h1>
-        <input type="text">
-        <button>Boutton</button>
-        <ul class="List">
-            
-        </ul>
+        <input id="newTask" type="text">
+        <button id="saveTask">Boutton</button><button id="loadTask">Load</button>
+        <ul id="ulList"></ul>
     </header>    
-    <main></main>
-    <footer></footer>
+    <script>
+        const newTask = document.getElementById("newTask");
+        const saveTask = document.getElementById("saveTask");
+        const loadTask = document.getElementById("loadTask");
+        let ulList = document.getElementById("ulList");
+        let taskName;
+        let localID = 0;
+        let isDifferentFound = false;
+        var delID;
+        
+        // localStorage.removeItem(3);
+      
+        saveTask.addEventListener('click', function savedTask(){
+            localID++;
+            delID = localID;
+            console.log(localID);
+            localStorage.getItem(localID);
+            let listVar = document.createElement("li");
+            let li = document.querySelectorAll("li");
+            taskName = newTask.value;
+            newTask.value = "";          
+            listVar.textContent = taskName;
+            localStorage.setItem(localID,taskName);
+            
+
+            // Parcourir les éléments <li> et vérifier si l'un d'eux est différent
+            for (let listVar of li.textContent) {
+                if (listVar.textContent !== taskName) {
+                    isDifferentFound = true;
+                    break;
+                }
+            }
+
+            if(taskName != "" && isDifferentFound){
+                ulList.appendChild(listVar);
+                const delTask = document.createElement("button");
+                delTask.innerText = "Suppr"
+                delTask.addEventListener('click', function () {
+                    ulList.removeChild(listVar);
+                    delTask.remove();
+                    //localStorage.removeItem(delID);                
+                    removeLocalStorageItem(taskName);
+                })
+                ulList.appendChild(delTask);
+            
+            }
+        function removeLocalStorageItem(value) {
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (localStorage.getItem(key) === value) {
+                    localStorage.removeItem(key);                console.log(`Donnée supprimée du localStorage : ${key}`);
+                    break;
+                }
+            }
+        }
+       
+        console.log(li.values);
+        });
+        
+        loadTask.addEventListener('click', function loadedTask(){
+            for(let i = 0; i<localStorage.length; i++){
+                let listVar = document.createElement("li");
+
+                taskName = localStorage.getItem(localStorage.key(i));
+                listVar.innerHTML = taskName;
+                console.log(localStorage.getItem((localStorage.key(i))));
+                ulList.appendChild(listVar);
+                const delTask = document.createElement("button");
+                delTask.innerText = "Suppr"
+                delTask.addEventListener('click', function () {
+                    ulList.removeChild(listVar);
+                    ulList.removeChild(delTask);
+                    localStorage.removeItem(i);
+                    
+                })
+                ulList.appendChild(delTask);
+            }
+
+        });
+
+    </script>
 </body>
 </html>
