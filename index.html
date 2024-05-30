@@ -16,79 +16,169 @@
         <ul id="ulList"></ul>
     </header>
     <script>
+        // Mon code mais les bouttons Suppr sont en bas du texte
+        {
+        // const newTask = document.getElementById("newTask");     // Zone de texte, pour écrire les tâches
+        // const saveTask = document.getElementById("saveTask");   // Boutton ajout de tâche
+        // const loadTask = document.getElementById("loadTask");   // Boutton récupèrer données du Local storage
+        // let ulList = document.getElementById("ulList");         // Structure HTML qui contiendra les tâches
+        // let taskName;
+        // let varContent = [];
+        // let varScanner = [];
+        // //---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//
+
+        // // localStorage.clear();
+
+        // saveTask.addEventListener('click', function savedTask() {
+        //     let listVar = document.createElement("li"); // Crée un "li" (le texte de la tâche)
+
+        //     if (!varScanner.find(element => element == newTask.value)) { // Assure que la Tâche que j'ai dans la zone d'Input n'éxiste pas déjà
+        //         taskName = newTask.value;   // Récupère le contenu du Input dans taskName
+        //         console.log("Worked if: ", varScanner.find(element => element === taskName));
+        //         console.log(varScanner);
+        //         newTask.value = ""; // Vide le text de la zone Input
+        //         listVar.textContent = taskName; // le "li" récupère le texte pour crée la tâche 
+        //         if (taskName != "") { varContent.push(taskName); } // Liste des tâches à save dans le LocalStorage 
+        //         console.log('varContent :', varContent);
+        //         if (varContent.find(element => element != "") || varContent.find(element => element != null)) {
+        //             localStorage.setItem('Tasks', JSON.stringify(varContent));
+
+        //             if (taskName != "" && varContent != "") { // Si le Input est vide, ne crée pas de tâches
+        //                 let lsList = JSON.parse(localStorage.getItem('Tasks')) || []; // Récupère et transform les données dans Local storage
+        //                 let delPosition = lsList.indexOf(listVar.textContent); // Position à utiliser dans le .Splice()
+        //                 console.log("Found index of searched String: ", lsList.indexOf(listVar.textContent));
+        //                 ulList.appendChild(listVar); // Ajoute la tâche sur le site
+        //                 newTask.focus(); // Revien automatiquement dans l'input
+        //                 varScanner.push(listVar.textContent); // Variable à scanner dans le If, obtien son string
+        //                 console.log("Worked 2nd: ", varScanner.find(element => element === taskName));
+
+        //                 // console.log("Push: ", varScanner.push(listVar.textContent));
+        //                 const delTask = document.createElement("button");
+        //                 delTask.innerText = "Suppr"
+        //                 delTask.addEventListener('click', function deletedT() { // Fonction boutton suppr
+        //                     // Recalculer l'indice de l'élément à chaque suppression
+        //                     let delPosition = varContent.indexOf(listVar.textContent);
+
+        //                     // Supprimer l'élément de l'HTML
+        //                     ulList.removeChild(listVar);
+        //                     delTask.remove();
+
+        //                     // Supprimer l'élément de varContent et mettre à jour le localStorage
+        //                     varContent.splice(delPosition, 1);
+        //                     console.log(varContent);
+
+        //                     localStorage.setItem('Tasks', JSON.stringify(varContent));
+
+        //                     // Mettre à jour varScanner
+        //                     varScanner = [];
+
+        //                 }) // Fin fonction boutton suppr
+        //                 ulList.appendChild(delTask); // Ajoute le boutton suppr tâche
+        //             }
+        //         }
+        //     } else { console.error("Pas de tâches identiques !"); }
+        // }); // Fin fonction savedTask()
+
+        // //---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//
+        // loadTask.addEventListener('click', function loadedTask() {
+        //     varContent = JSON.parse(localStorage.getItem(localStorage.key('Tasks')));
+        //     for (let i = 0; i < varContent.length; i++) {
+        //         let listVar = document.createElement("li");
+        //         listVar.textContent = varContent[i];
+
+        //         ulList.appendChild(listVar);
+        //         const delTask = document.createElement("button");
+        //         delTask.innerText = "Suppr"
+        //         delTask.addEventListener('click', function () {
+        //             // Recalculer l'indice de l'élément à chaque suppression
+        //             let delPosition = varContent.indexOf(listVar.textContent);
+
+        //             // Supprimer l'élément de l'HTML
+        //             ulList.removeChild(listVar);
+        //             delTask.remove();
+
+        //             // Supprimer l'élément de varContent et mettre à jour le localStorage
+        //             varContent.splice(delPosition, 1);
+
+        //             localStorage.setItem('Tasks', JSON.stringify(varContent));
+
+        //             // Mettre à jour varScanner
+        //             varScanner = [];
+
+        //         }) // Fin fonction boutton suppr
+        //         ulList.appendChild(delTask); // Ajoute le boutton suppr tâche
+        //     }
+        // });
+    }
+       
+        //---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//
+        
+        // Correction de Chatgpt pour faire les bouttons Suppr en tant que enfant du Texte
         
         const newTask = document.getElementById("newTask");     // Zone de texte, pour écrire les tâches
         const saveTask = document.getElementById("saveTask");   // Boutton ajout de tâche
         const loadTask = document.getElementById("loadTask");   // Boutton récupèrer données du Local storage
         let ulList = document.getElementById("ulList");         // Structure HTML qui contiendra les tâches
         let taskName;
-        let varContent = [];
+        let varContent = JSON.parse(localStorage.getItem('Tasks')) || [];
         let varScanner = [];
-        // -----------------------------------------------------------------------------------------------------------
 
-        saveTask.addEventListener('click', function savedTask() {
+        // Fonction pour créer un élément de tâche
+        function createTaskElement(taskName) {
             let listVar = document.createElement("li"); // Crée un "li" (le texte de la tâche)
+            listVar.textContent = taskName;
 
-            if (!varScanner.find(element => element == newTask.value)) { // Assure que la Tâche que j'ai dans la zone d'Input n'éxiste pas déjà
-                taskName = newTask.value;   // Récupère le contenu du Input dans taskName
-                console.log("Worked if: ", varScanner.find(element => element === taskName));
-                console.log(varScanner);
-                newTask.value = ""; // Vide le text de la zone Input
-                listVar.textContent = taskName; // le "li" récupère le texte pour crée la tâche 
-                varContent.push(taskName); // Liste des tâches à save dans le LocalStorage 
-                console.log('varContent :', varContent);
-                if (varContent.find(element => element != "") || varContent.find(element => element != null)) {
-                    localStorage.setItem('Tasks', JSON.stringify(varContent));
+            const delTask = document.createElement("button");
+            delTask.innerText = "Suppr";
+            delTask.addEventListener('click', function () { // Fonction bouton supprimer
+                deleteTask(listVar, taskName);
+            });
 
-                    if (taskName != "") { // Si le Input est vide, ne crée pas de tâches
-                        let lsList = JSON.parse(localStorage.getItem('Tasks')) || []; // Récupère et transform les données dans Local storage
-                        let delPosition = lsList.indexOf(listVar.textContent); // Position à utiliser dans le .Splice()
-                        console.log("Found index of searched String: ", lsList.indexOf(listVar.textContent));
-                        ulList.appendChild(listVar); // Ajoute la tâche sur le site
-                        newTask.focus(); // Revien automatiquement dans l'input
-                        varScanner.push(listVar.textContent); // Variable à scanner dans le If, obtien son string
-                        console.log("Worked 2nd: ", varScanner.find(element => element === taskName));
+            listVar.appendChild(delTask);
+            ulList.appendChild(listVar);
+        }
 
-                        // console.log("Push: ", varScanner.push(listVar.textContent));
-                        const delTask = document.createElement("button");
-                        delTask.innerText = "Suppr"
-                        delTask.addEventListener('click', function () { // Fonction boutton suppr
-                            varContent, listVar, lsList, delPosition; // Refresh les données
-                            ulList.removeChild(listVar);    // Supprime les deux éléments du HTML
-                            delTask.remove();               //
-                            varContent.splice(delPosition, 1); // Supprime 1 élément dans VarContent
-                            console.log("VarContent (after del): ",varContent);
-                            console.log('Spliced element from VarContent: ', varContent.splice(delPosition, 1));
+        // Fonction pour supprimer une tâche
+        function deleteTask(listVar, taskName) {
+            let delPosition = varContent.indexOf(taskName);
 
-                            varContent, listVar, lsList, delPosition; // Refresh les données
-                            localStorage.setItem('Tasks', JSON.stringify(varContent)); // Actualise le LocalStorage
-                            varScanner = []; // Vide VarScanner pour éviter des problèmes a suppr des valeurs
-                            console.log("Found index of searched String (after deleted): ", lsList.indexOf(listVar.textContent));
-                        }) // Fin fonction boutton suppr
-                        ulList.appendChild(delTask); // Ajoute le boutton suppr tâche
-                    } 
-                } 
-            } else {console.error("Pas de tâches identiques !");}
-        }); // Fin fonction savedTask()
+            // Supprimer l'élément de l'HTML
+            ulList.removeChild(listVar);
 
-        // --------------------------------------------------------------------------------------------------
-        loadTask.addEventListener('click', function loadedTask() {
-            varContent = JSON.parse(localStorage.getItem(localStorage.key('Tasks')));
-            for (let i = 0; i < varContent.length; i++) {
-                let listVar = document.createElement("li");
-                listVar.textContent = varContent[i];
+            // Supprimer l'élément de varContent et mettre à jour le localStorage
+            if (delPosition > -1) {
+                varContent.splice(delPosition, 1);
+                localStorage.setItem('Tasks', JSON.stringify(varContent));
+            }
 
-                ulList.appendChild(listVar);
-                const delTask = document.createElement("button");
-                delTask.innerText = "Suppr"
-                delTask.addEventListener('click', function () {
-                    ulList.removeChild(listVar);
-                    ulList.removeChild(delTask);
-                })
-                ulList.appendChild(delTask);
+            // Mettre à jour varScanner
+            varScanner = varScanner.filter(task => task !== taskName);
+        }
+
+        // Ajouter une tâche
+        saveTask.addEventListener('click', function () {
+            taskName = newTask.value.trim();
+            if (taskName && !varScanner.includes(taskName)) { // Assure que la Tâche que j'ai dans la zone d'Input n'existe pas déjà
+                createTaskElement(taskName);
+                varContent.push(taskName);
+                localStorage.setItem('Tasks', JSON.stringify(varContent));
+                varScanner.push(taskName);
+                newTask.value = "";
+                newTask.focus();
+            } else {
+                console.error("Pas de tâches identiques !");
             }
         });
-        // --------------------------------------------------------------------------------------------
+
+        // Charger les tâches depuis le localStorage
+        loadTask.addEventListener('click', function () {
+            ulList.innerHTML = ''; // Vider la liste existante
+            varContent = JSON.parse(localStorage.getItem('Tasks')) || [];
+            varContent.forEach(taskName => {
+                createTaskElement(taskName);
+                varScanner.push(taskName);
+            });
+        });
     </script>
 </body>
 </html>
