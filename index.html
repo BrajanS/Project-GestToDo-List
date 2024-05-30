@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+    <head>
+        <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To do list</title>
     <link rel="stylesheet" href="style.css">
@@ -14,62 +14,69 @@
         <ul id="ulList"></ul>
     </header>    
     <script>
-        const newTask = document.getElementById("newTask");
-        const saveTask = document.getElementById("saveTask");
-        const loadTask = document.getElementById("loadTask");
-        let ulList = document.getElementById("ulList");
+        const newTask = document.getElementById("newTask");     // Zone de texte, pour écrire les tâches
+        const saveTask = document.getElementById("saveTask");   // Boutton ajout de tâche
+        const loadTask = document.getElementById("loadTask");   // Boutton récupèrer données du Local storage
+        let ulList = document.getElementById("ulList");         // Structure HTML qui contiendra les tâches
         let taskName;
-        let localID = 0;
-        let isDifferentFound = false;
-        var delID;
+        let varContent = [];
+        let li = document.querySelectorAll("li");  // Select tous les "li"'s
+        let varScanner = [];
         
-        // localStorage.removeItem(3);
-      
+        // localStorage.clear();
+        
+
         saveTask.addEventListener('click', function savedTask(){
-            localID++;
-            delID = localID;
-            console.log(localID);
-            localStorage.getItem(localID);
-            let listVar = document.createElement("li");
-            let li = document.querySelectorAll("li");
-            taskName = newTask.value;
-            newTask.value = "";          
-            listVar.textContent = taskName;
-            localStorage.setItem(localID,taskName);
+            let listVar = document.createElement("li"); // Crée un "li" (le texte de la tâche)
             
+            if(!varScanner.find(element => element == newTask.value)){
+                taskName = newTask.value;   // Récupère le contenu du Input dans taskName
+               
+                console.log("Worked if: ",varScanner.find(element => element === taskName));
+                console.log(varScanner);
 
-            // Parcourir les éléments <li> et vérifier si l'un d'eux est différent
-            for (let listVar of li.textContent) {
-                if (listVar.textContent !== taskName) {
-                    isDifferentFound = true;
-                    break;
-                }
-            }
+                newTask.value = ""; // Vide le text de la zone Input
+                
+                listVar.textContent = taskName; // le "li" récupère le texte pour crée la tâche 
+                varContent.push(taskName); // Liste des tâches à save dans le LocalStorage 
 
-            if(taskName != "" && isDifferentFound){
-                ulList.appendChild(listVar);
-                const delTask = document.createElement("button");
-                delTask.innerText = "Suppr"
-                delTask.addEventListener('click', function () {
-                    ulList.removeChild(listVar);
-                    delTask.remove();
-                    //localStorage.removeItem(delID);                
-                    removeLocalStorageItem(taskName);
-                })
-                ulList.appendChild(delTask);
-            
-            }
-        function removeLocalStorageItem(value) {
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                if (localStorage.getItem(key) === value) {
-                    localStorage.removeItem(key);                console.log(`Donnée supprimée du localStorage : ${key}`);
-                    break;
+                console.log('varContent :', varContent);
+                if(varContent.find(element => element != "") || varContent.find(element => element != null)){
+                    localStorage.setItem('Tasks',JSON.stringify(varContent)); 
                 }
-            }
-        }
-       
-        console.log(li.values);
+                let lsList = JSON.parse(localStorage.getItem('Tasks')) || [];
+                let delPosition = lsList.indexOf(listVar.textContent);
+                console.log(lsList.indexOf(listVar.textContent));
+
+                if(taskName != ""){ // Si le Input est vide, ne crée pas de tâches
+                    ulList.appendChild(listVar); // Ajoute la tâche sur le site
+                    varScanner.push(listVar.textContent);
+                    console.log("Worked 2nd: ",varScanner.find(element => element === taskName));
+
+                    console.log("Push: ",varScanner.push(listVar.textContent));
+                    const delTask = document.createElement("button");
+                    delTask.innerText = "Suppr"
+                    delTask.addEventListener('click', function () { // Fonction boutton suppr
+                        ulList.removeChild(listVar);
+                        delTask.remove();
+                        varContent, listVar, lsList, delPosition; // Refresh les données
+                        varContent.splice(delPosition, 1); 
+                        if(varContent.length < 2){
+                            localStorage.clear();
+                        }
+                        
+                        else {
+                            varContent,listVar, lsList, delPosition; // Refresh les données
+                            localStorage.setItem('Tasks',JSON.stringify(varContent));} // Il actualise par le varContent qui
+                            varScanner = [];
+                            // varContent = [];
+                        // a suppr des valeurs, mais il garde 1 variable par defaut dans le localStorage
+                    
+                    })
+                    ulList.appendChild(delTask); // Ajoute le boutton suppr tâche
+                li;
+                }
+            } // Fin boucle empêchant l'identique
         });
         
         loadTask.addEventListener('click', function loadedTask(){
@@ -77,16 +84,14 @@
                 let listVar = document.createElement("li");
 
                 taskName = localStorage.getItem(localStorage.key(i));
-                listVar.innerHTML = taskName;
+                listVar.textContent = taskName;
                 console.log(localStorage.getItem((localStorage.key(i))));
                 ulList.appendChild(listVar);
                 const delTask = document.createElement("button");
                 delTask.innerText = "Suppr"
                 delTask.addEventListener('click', function () {
                     ulList.removeChild(listVar);
-                    ulList.removeChild(delTask);
-                    localStorage.removeItem(i);
-                    
+                    ulList.removeChild(delTask);                   
                 })
                 ulList.appendChild(delTask);
             }
